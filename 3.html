@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        #bodycontainer {
+            font-family: Arial, sans-serif;
+            background-color:darkblue;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 80%;
+        }
+
+        #side {
+            height: 300px;
+            width: 300px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #tasks-display {
+            width: calc(80% - 320px);
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            
+        }
+
+        button {
+            background-color:darkblue;
+            color: #fff;
+            margin-top: 10px;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        #titleInput,
+        #descriptionInput {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .task {
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+h1{
+ font-size:50px;
+ color:darkblue;
+}
+b{
+ color:darkblue;
+}
+    </style>
+</head>
+
+<body>
+<center>
+<h1>TO DO TASK</h1>
+</center>
+<div id='bodycontainer'>
+    <div id="container">
+        <div id="side">
+            <input type='text' id="titleInput" placeholder="Title">
+            <br><br>
+            <textarea style="height: 150px; width:100%;" id="descriptionInput" placeholder="Description"></textarea>
+            <br><br>
+            <button onclick="addTask()">Save</button>
+        </div>
+        <div id="tasks-display">
+            <!-- Task table will be appended here dynamically -->
+        </div>
+    </div>
+</div>
+    <script>
+        let tasks = [];
+
+        function addTask() {
+            const titleInput = document.getElementById("titleInput");
+            const descriptionInput = document.getElementById("descriptionInput");
+
+            const title = titleInput.value.trim();
+            const description = descriptionInput.value.trim();
+
+            if (title !== "" && description !== "") {
+                const newTask = {
+                    id: Date.now(),
+                    title: title,
+                    description: description,
+                    completed: false
+                };
+
+                tasks.push(newTask);
+                titleInput.value = "";
+                descriptionInput.value = "";
+                displayTasks();
+            }
+        }
+
+        function displayTasks() {
+            const tasksDisplay = document.getElementById("tasks-display");
+            tasksDisplay.innerHTML = "";
+
+            const table = document.createElement("table");
+            table.border = "2";
+
+            const headerRow = table.insertRow();
+            const titleHeader = headerRow.insertCell(0);
+            titleHeader.innerHTML = "<b>Title</b>";
+            const descriptionHeader = headerRow.insertCell(1);
+            descriptionHeader.innerHTML = "<b>Description</b>";
+            const deleteHeader = headerRow.insertCell(2);
+            deleteHeader.innerHTML = "<b>Action</b>";
+
+            tasks.forEach(task => {
+                const row = table.insertRow();
+
+                const titleCell = row.insertCell(0);
+                titleCell.innerHTML = task.title;
+
+                const descriptionCell = row.insertCell(1);
+                descriptionCell.innerHTML = task.description;
+
+                const deleteCell = row.insertCell(2);
+                deleteCell.innerHTML = `<button class="delete-button" onclick="deleteTask(${task.id})">delete</button>`;
+            });
+
+            tasksDisplay.appendChild(table);
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(task => task.id !== id);
+            displayTasks();
+        }
+
+        
+        displayTasks();
+    </script>
+</body>
+
+</html>

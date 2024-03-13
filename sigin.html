@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<head>
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-image:url("https://static.vecteezy.com/system/resources/thumbnails/007/164/537/small/fingerprint-identity-sensor-data-protection-system-podium-hologram-blue-light-and-concept-free-vector.jpg");
+      background-size:cover;
+    }
+
+    form {
+      max-width: 300px;
+      margin: auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      background:rgba(250, 250, 250, 0.1);
+      backdrop-filter:blur(10px);
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      box-sizing: border-box;
+    }
+    label,h2{
+      color:#fff;
+    }
+       button {
+      margin:5px 70px;
+      width: 45%;
+      padding: 10px;
+      background-color:#4681f4;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <form id="signup">
+    <h2>Signup</h2>
+    <label for="username">Username:</label>
+    <input type="text" id="username" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" required>
+          <button type="button" onclick="registerUser()">Register</button>
+            </form>
+
+
+  <form id="loginForm" style="display:none;">
+    <h2>User Login</h2>
+    <label for="loginUsername">Username:</label>
+    <input type="text" id="loginUsername" required>
+
+    <label for="loginPassword">Password:</label>
+    <input type="password" id="loginPassword" required>
+
+    <button type="button" onclick="loginUser()">Login</button>
+
+  </form>
+
+  <div id="securedContent" style="display:none;">
+<center>
+    <h1 style="font-size:100px;color:#fff;">WELCOME</h1>
+    </center>
+  </div>
+
+  <script>
+    let users = [];
+    function caesarEncrypt(inputString, shift) {
+      return inputString.replace(/[a-zA-Z]/g, function(char) {
+        const base = char.toLowerCase() === char ? 'a' : 'A';
+        return String.fromCharCode((char.charCodeAt(0) - base.charCodeAt(0) + shift) % 26 + base.charCodeAt(0));
+      });
+    }
+
+    function registerUser() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const encryptedPassword = caesarEncrypt(password, 3);
+      users.push({ username, password: encryptedPassword });
+      document.getElementById('signup').reset();
+      document.getElementById('signup').style.display = 'none';
+      document.getElementById('loginForm').style.display = 'block';
+    }
+    function caesarDecrypt(inputString, shift) {
+      return caesarEncrypt(inputString, 26 - shift);
+    }
+
+    function loginUser() {
+      const loginUsername = document.getElementById('loginUsername').value;
+      const loginPassword = document.getElementById('loginPassword').value;
+      const user = users.find(u => u.username === loginUsername && caesarDecrypt(u.password, 3) === loginPassword);
+
+      if (user) {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('securedContent').style.display = 'block';
+      } else {
+        alert('Invalid username or password');
+      }
+    }
+
+      </script>
+</body>
+</html>
